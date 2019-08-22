@@ -19,7 +19,7 @@
         <spring.cloud.version>2.0.3.RELEASE</spring.cloud.version>
         <!-- Plugins Version -->
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
         <maven-war-plugin.version>3.0.0</maven-war-plugin.version>
@@ -31,7 +31,7 @@
         <maven-docker-plugin.version>1.2.0</maven-docker-plugin.version>
         <maven-helm-version>4.7</maven-helm-version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
-        <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
         <!-- custom properties -->
         <docker.registry>docker-dev.credit2go.cn</docker.registry>
         <maven.enforce.level></maven.enforce.level>
@@ -295,13 +295,45 @@
                             <id>coverage-initialize</id>
                             <goals>
                                 <goal>prepare-agent</goal>
+                                <goal>prepare-agent-integration</goal>
                             </goals>
                         </execution>
                         <execution>
                             <id>coverage-report</id>
                             <goals>
                                 <goal>report</goal>
+                                <goal>report-integration</goal>
                             </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.robotframework</groupId>
+                    <artifactId>robotframework-maven-plugin</artifactId>
+                    <version>1.5.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.robotframework</groupId>
+                            <artifactId>robotframework</artifactId>
+                            <version>3.1.2</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>robot run</id>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <log>none</log>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>generate robotframework report</id>
+                            <goals>
+                                <goal>rebot</goal>
+                            </goals>
+                            <phase>post-integration-test</phase>
                         </execution>
                     </executions>
                 </plugin>
@@ -344,6 +376,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
             </plugin>
+            <!-- make sure jacoco plugin is executed before spring-boot maven -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -363,10 +400,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -575,7 +608,7 @@
                         <artifactId>dependency-check-maven</artifactId>
                         <version>5.2.1</version>
                         <configuration>
-                            <cveUrlBase>https://repo.credit2go.cn/nexus/repostitory/nist/nvdcve-1.0-%d.json.gz
+                            <cveUrlBase>https://repo.credit2go.cn/nexus/repository/nist/nvdcve-1.0-%d.json.gz
                             </cveUrlBase>
                             <cveUrlModified>
                                 https://repo.credit2go.cn/nexus/repository/nist/nvdcve-1.0-modified.json.gz
