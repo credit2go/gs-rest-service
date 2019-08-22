@@ -322,10 +322,20 @@
                         <execution>
                             <id>robot run</id>
                             <goals>
-                                <goal>run</goal>
+                                <goal>acceptance-test</goal>
                             </goals>
                             <configuration>
                                 <log>none</log>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>verify robot result</id>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                            <phase>post-integration-test</phase>
+                            <configuration>
+                                <isTestFailureIgnore>true</isTestFailureIgnore>
                             </configuration>
                         </execution>
                         <execution>

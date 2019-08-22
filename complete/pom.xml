@@ -51,6 +51,7 @@
                             <goal>stop</goal>
                         </goals>
                         <configuration>
+                            <skip>${skipTests}</skip>
                             <!-- use jacoco generate argLine -->
                             <jvmArguments>${argLine}</jvmArguments>
                         </configuration>
